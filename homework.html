@@ -1,0 +1,67 @@
+<head>
+  <title> &lt;3 homework</title>
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/foundation.min.css">
+</head>
+
+<body>
+  <div class="cont">
+  <div class="small-5 small-centered columns">
+    <div class="logo"></div>
+    <h1 class="title">Homework</h1>
+    <div class="subtitle">Better get working.</div>
+
+    {{> todo}}
+
+  
+    {{> addTask}}
+  </div>
+  </div>
+</body>
+
+<template name="todo">
+  <ol class="todo">
+    {{#each tasks}}
+      {{> task}}
+    {{/each}}
+  </ol>  
+</template>
+
+<template name="task">
+  <li class="task {{selected}}">
+    <div class="name">{{name}}</div>
+    <div class="due">{{due}}</div>
+
+  {{#if selected}}
+    <div class="details">
+      <div class="detailsCont">
+        <h4>{{course}}</h4>
+        <p>{{details}}</p>
+      </div>
+    </div>
+  {{/if}}
+  </li>
+</template>
+
+<template name="addTask">
+<form class="taskInput">
+  <div class="row">
+    <div class="small-7 columns">
+      <input type="text" name="name" placeholder="name"/> 
+    </div>
+    <div class="small-5 columns">
+      <input type="date" name="due"/>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-7 columns">
+      <textarea name="details" placeholder="details"></textarea>
+    </div>
+    <div class="small-4 columns">
+      <input type="text" name="course" placeholder="class" />
+    </div>
+  </div>
+    <input type="submit"  class="button" value="Submit">
+</form>
+</template>

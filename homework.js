@@ -11,17 +11,23 @@ if (Meteor.isClient) {
 
   Template.task.helpers({
     selected: function () {
-      return Session.equals("selected", this._id) ? "selected" : '';
+      var taskID = this._id;
+      var selectedTask = Session.get('selectedTask');
+      if(taskID == selectedTask){
+          return "selected"
+      }
     }
   });
 
   Template.task.events({
     'click': function () {
-      Session.set("selected", this._id);
+      var taskID = this._id;
+      Meteor.call("isSelected", taskID);
     },
 
     'click .delete': function () {
-      tasks.remove(this._id);
+      var taskID = this._id;
+      Meteor.call("deleteTask", taskID);
     }
   });
 
@@ -37,14 +43,7 @@ if (Meteor.isClient) {
       var details = event.target.details.value;
       var currentUserId = Meteor.userId();
  
-      // Insert a task into the collection
-      tasks.insert({
-        name: name,
-        due: due,
-        course: course,
-        details: details,
-        createdBy: currentUserId
-      });
+      Meteor.call("addTask", name, due, course, details, currentUserId);
  
       // Clear form
       event.target.name.value = "";
@@ -60,3 +59,26 @@ if (Meteor.isServer) {
     console.log('yes... i love homework.')
   });
 }
+
+Meteor.methods({
+  addTask: function (name, due, course, details, currentUserId) {
+    // Make sure the user is logged in before inserting a task
+    if (! Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
+ 
+    tasks.insert({
+      name: name,
+      due: due,
+      course: course,
+      details: details,
+      createdBy: currentUserId
+    });
+  },
+  deleteTask: function (taskID) {
+    tasks.remove(taskID);
+  },
+  isSelected: function (taskID) {
+    Session.set("selectedTask", taskID);
+  }
+});

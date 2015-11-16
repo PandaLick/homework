@@ -4,7 +4,8 @@ if (Meteor.isClient) {
 
   Template.todo.helpers({
   	tasks: function () {
-  		return tasks.find({}, { sort: { name : 1 }});
+      var currentUserId = Meteor.userId();
+  		return tasks.find({createdBy: currentUserId}, {sort: {score: -1, name: 1}});
   	}
   })
 
@@ -17,6 +18,10 @@ if (Meteor.isClient) {
   Template.task.events({
     'click': function () {
       Session.set("selected", this._id);
+    },
+
+    'click .delete': function () {
+      tasks.remove(this._id);
     }
   });
 
@@ -30,13 +35,15 @@ if (Meteor.isClient) {
       var due = event.target.due.value;
       var course = event.target.course.value;
       var details = event.target.details.value;
+      var currentUserId = Meteor.userId();
  
       // Insert a task into the collection
       tasks.insert({
         name: name,
         due: due,
         course: course,
-        details: details
+        details: details,
+        createdBy: currentUserId
       });
  
       // Clear form

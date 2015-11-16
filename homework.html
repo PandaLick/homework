@@ -2,20 +2,29 @@
   <title> &lt;3 homework</title>
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/foundation.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 </head>
 
 <body>
   <div class="cont">
+
   <div class="small-5 small-centered columns">
-    <div class="logo"></div>
     <h1 class="title">Homework</h1>
     <div class="subtitle">Better get working.</div>
 
+  {{> loginButtons}} 
+
+  {{#if currentUser}}
     {{> todo}}
 
-  
     {{> addTask}}
+  {{/if}}
   </div>
+  </div>
+  <div class="footer">
+    <div class="small-12 small-centered columns">
+      <h1>a nick wong production</h1>
+    </div>
   </div>
 </body>
 
@@ -35,7 +44,8 @@
   {{#if selected}}
     <div class="details">
       <div class="detailsCont">
-        <h4>{{course}}</h4>
+        <h4 style="display: inline-block">{{course}}</h4>
+        <i class="fa fa-times delete"></i>
         <p>{{details}}</p>
       </div>
     </div>
@@ -44,24 +54,26 @@
 </template>
 
 <template name="addTask">
-<form class="taskInput">
-  <div class="row">
-    <div class="small-7 columns">
-      <input type="text" name="name" placeholder="name"/> 
+<div class="panel">
+  <form class="taskInput">
+    <div class="row">
+      <div class="small-6 columns">
+        <input type="text" name="name" placeholder="name"/> 
+      </div>
+      <div class="small-5 columns" style="padding:0;" >
+        <input type="date" name="due"/>
+      </div>
     </div>
-    <div class="small-5 columns">
-      <input type="date" name="due"/>
-    </div>
-  </div>
 
-  <div class="row">
-    <div class="small-7 columns">
-      <textarea name="details" placeholder="details"></textarea>
+    <div class="row">
+      <div class="small-7 columns">
+        <textarea name="details" placeholder="details"></textarea>
+      </div>
+      <div class="small-4 columns">
+        <input type="text" name="course" placeholder="class" />
+      </div>
     </div>
-    <div class="small-4 columns">
-      <input type="text" name="course" placeholder="class" />
-    </div>
-  </div>
-    <input type="submit"  class="button" value="Submit">
-</form>
+      <button id="submit" type="submit" class="button expand">Submit</button>
+  </form>
+</div>
 </template>

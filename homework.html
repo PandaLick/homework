@@ -7,23 +7,34 @@
 
 <body>
   <div class="cont">
+    <div class="small-5 small-centered columns">
 
-  <div class="small-5 small-centered columns">
-    <h1 class="title">Homework</h1>
-    <div class="subtitle">Better get working.</div>
+    {{#if currentUser}}
+      <h1 class="title">Homework</h1>
+      <div class="subtitle">Better get working.</div>
+      {{> loginButtons}}
+      {{> todo}}
 
-  {{> loginButtons}} 
+      {{> addTask}}
 
-  {{#if currentUser}}
-    {{> todo}}
+    {{else}}
 
-    {{> addTask}}
-  {{/if}}
+      <div class="row intro" style="height:60vh;">
+        <div class="small-12 small-centered columns introCont">
+          <h1>Welcome to Homework</h1>
+          <h2>Na‘auao Project Prototype</h2>
+          {{> loginButtons}}
+          <!-- <a href="#" class="button" id="signIn">Sign In</a> -->
+        </div>
+      </div>
+
+    {{/if}} 
+    </div>
   </div>
-  </div>
+
   <div class="footer">
     <div class="small-12 small-centered columns">
-      <h1>a nick wong production</h1>
+      <h1>a <a href="http://nwinc.co">nick wong</a> production</h1>
     </div>
   </div>
 </body>

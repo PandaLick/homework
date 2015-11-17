@@ -55,19 +55,20 @@
 
 <template name="addTask">
 <div class="panel">
+<h1 class="taskHeader">create a new task</h1>
   <form class="taskInput">
     <div class="row">
       <div class="small-6 columns">
-        <input type="text" name="name" placeholder="name"/> 
+        <input type="text" name="name" placeholder="task name"/> 
       </div>
       <div class="small-5 columns" style="padding:0;" >
-        <input type="date" name="due"/>
+        <input type="date" name="due" placebolder="due"/>
       </div>
     </div>
 
     <div class="row">
       <div class="small-7 columns">
-        <textarea name="details" placeholder="details"></textarea>
+        <textarea name="details" placeholder="task details"></textarea>
       </div>
       <div class="small-4 columns">
         <input type="text" name="course" placeholder="class" />

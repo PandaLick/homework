@@ -96,6 +96,12 @@ body {
   background-color: #fefff4;
 }
 
+.taskHeader {
+  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  font-size: 25px;
+}
+
 /*.add-button {
   background: #e5e5e5;
   position: relative;

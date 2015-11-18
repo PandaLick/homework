@@ -207,6 +207,7 @@ input {
   margin-bottom: 0px;
   font-size: 18px;
   font-weight: 300;
+  display: inline-block;
 }
 
 .delete {
@@ -214,6 +215,10 @@ input {
   float: right; 
   margin-right: 20px;
   margin-top: 20px;
+}
+
+.confirm {
+  display: inline-block;
 }
 
 .footer {

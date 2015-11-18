@@ -1,19 +1,24 @@
 tasks = new Mongo.Collection("tasks");
 
 if (Meteor.isClient) {
+  var currentUserId = Meteor.userId();
+  Meteor.subscribe('tasks', currentUserId);
 
   Template.todo.helpers({
   	tasks: function () {
+      // upon switching accounts, tasks do not auto populate
       var currentUserId = Meteor.userId();
-  		return tasks.find({createdBy: currentUserId}, {sort: {score: -1, name: 1}});
+  		return tasks.find({}, {sort: {score: -1, name: 1}});
   	}
   })
 
   Template.task.helpers({
     selected: function () {
-      var taskID = this._id;
-      var selectedTask = Session.get('selectedTask');
-      if(taskID == selectedTask){
+      // this._id refers to ID's of all current tasks
+      var allTasks = this._id;
+      var selectedTask = Session.get("selected");
+      // scans ID's to find match -> if the ID's match, that one is 'selected'
+      if(allTasks == selectedTask){
           return "selected"
       }
     }
@@ -21,8 +26,8 @@ if (Meteor.isClient) {
 
   Template.task.events({
     'click': function () {
-      var taskID = this._id;
-      Meteor.call("isSelected", taskID);
+      var taskID = this._id
+      Session.set("selected", taskID);
     },
 
     'click .delete': function () {
@@ -58,6 +63,10 @@ if (Meteor.isServer) {
   Meteor.startup(function () {
     console.log('yes... i love homework.')
   });
+
+  Meteor.publish("tasks", function (createdBy) {
+    return tasks.find({createdBy: createdBy}, {sort: {score: -1, name: 1}});
+  });
 }
 
 Meteor.methods({
@@ -77,8 +86,6 @@ Meteor.methods({
   },
   deleteTask: function (taskID) {
     tasks.remove(taskID);
-  },
-  isSelected: function (taskID) {
-    Session.set("selectedTask", taskID);
+
   }
 });

@@ -6,10 +6,18 @@ if (Meteor.isClient) {
 
   Template.todo.helpers({
   	tasks: function () {
-      // upon switching accounts, tasks do not auto populate
-      var currentUserId = Meteor.userId();
-  		return tasks.find({}, {sort: {score: -1, name: 1}});
-  	}
+      return tasks.find({}, { sort: { due: 1 } });
+  	},
+
+    typesOptions: {
+      sortField: 'order',  // defaults to 'order' anyway
+      group: {
+        name: 'typeDefinition',
+        pull: 'clone',
+        put: false
+      },
+      sort: false  // don't allow reordering the types, just the attributes below
+    }
   })
 
   Template.task.helpers({
@@ -26,8 +34,9 @@ if (Meteor.isClient) {
 
   Template.task.events({
     'click': function () {
-      var taskID = this._id
+      var taskID = this._id;
       Session.set("selected", taskID);
+      console.log('and 1');
     },
 
     'click .delete': function () {
@@ -49,19 +58,39 @@ if (Meteor.isClient) {
       var currentUserId = Meteor.userId();
  
       Meteor.call("addTask", name, due, course, details, currentUserId);
- 
-      // Clear form
+      Meteor.call("sendEmail", name, due, course, details, currentUserId);
+      
       event.target.name.value = "";
       event.target.due.value = "";
       event.target.course.value = "";
       event.target.details.value = "";
+
     }
   });
 }
 
 if (Meteor.isServer) {
+
   Meteor.startup(function () {
+    // SyncedCron.add({
+    //   name: 'Daily email notifications.',
+    //   schedule: function(parser) {
+    //     // parser is a later.parse object
+    //     return parser.text('every 10 sec');
+    //   },
+    //   job: function() {
+    //     console.log('cat');
+    //     // Meteor.call("fetchTasks");
+    //   }
+    // });
+
+    console.log('app starting at ' + Date());
     console.log('yes... i love homework.')
+    process.env.MAIL_URL = 'smtp://postmaster@sandboxf116af3c6a2a4f0da3ef34a871b0ee0d.mailgun.org:a42fc913e66edab1d82dc07ceb16a047@smtp.mailgun.org:587';
+
+    Sortable.collections = tasks;
+
+    // SyncedCron.start();
   });
 
   Meteor.publish("tasks", function (createdBy) {
@@ -84,8 +113,18 @@ Meteor.methods({
       createdBy: currentUserId
     });
   },
+  sendEmail: function(name, due, course, details, currentUserId) {
+      Email.send({to:Meteor.user().emails[0].address, from:'no-reply@homework.naauao.com', subject:'New Task!', text:'A new task was created! \"' + name + '\" is due on: ' + due + '.  ' + '\n\nHappy working.'});
+      console.log('email sent.');
+  },
   deleteTask: function (taskID) {
     tasks.remove(taskID);
-
+    console.log('deleted task');
+  },
+  printUser: function () {
+    console.log(Meteor.user().emails[0].address);
+  },
+  fetchTasks: function () {
+    return tasks.find({}, {sort: {due: 1, score: -1, name: 1}});
   }
 });

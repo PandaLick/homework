@@ -41,9 +41,12 @@
 
 <template name="todo">
   <ol class="todo">
-    {{#each tasks}}
+<!--     {{#each tasks}}
       {{> task}}
-    {{/each}}
+    {{/each}} -->
+    {{#sortable items=tasks}}
+      {{> task}}
+    {{/sortable}}
   </ol>  
 </template>
 
